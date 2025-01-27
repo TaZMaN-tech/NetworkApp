@@ -29,6 +29,15 @@ struct Person: Decodable {
     var fullname: String {
         "\(firstname) \(lastname)"
     }
+    
+    var description: String {
+                """
+                Email: \(email)
+                Phone: \(phone)
+                Birthdate: \(birthday)
+                Adress: \(address.city), \(address.street), \(address.zipcode)
+                """
+    }
 }
 
 struct Address: Decodable {
