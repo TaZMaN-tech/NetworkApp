@@ -25,6 +25,10 @@ struct Person: Decodable {
     let birthday: String
     let gender: String
     let address: Address
+    
+    var fullname: String {
+        "\(firstname) \(lastname)"
+    }
 }
 
 struct Address: Decodable {
