@@ -13,9 +13,12 @@ final class ContactsViewController: UITableViewController {
     
     private let url = URL(string: "https://fakerapi.it/api/v2/persons?_quantity=15&_gender=female&_birthday_start=2005-01-01")!
     private let networkManager = NetworkManager.shared
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupActivityIndicator()
+        fetchPersons()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -26,16 +29,23 @@ final class ContactsViewController: UITableViewController {
         detailVC?.contact = contacts[indexPath.row]
     }
     
-    func fetchCell() {
-        networkManager.fetch(Response.self, from: url) { [weak self] result in
+    private func setupActivityIndicator() {
+            activityIndicator.center = view.center
+            activityIndicator.hidesWhenStopped = true
+            view.addSubview(activityIndicator)
+        }
+    
+    private func fetchPersons() {
+        networkManager.fetchPersons(from: url) { [unowned self] result in
             switch result {
-            case .success(let contacts):
-                self?.contacts = contacts.data
-                self?.tableView.reloadData()
+            case .success(let persons):
+                contacts = persons.data
+                tableView.reloadData()
             case .failure(let error):
-                print("Failed to fetch contacts: \(error)")
+                print(error)
             }
         }
+        
     }
 
     // MARK: - Table view data source
